@@ -1,0 +1,17 @@
+sfShortUrl:
+  actAs: [Timestampable]
+  columns:
+    id:               { type: integer, primary: true, autoincrement: true }
+    shorturl:         { type: varchar, size: 255, unique: true }
+    longurl:          { type: clob }
+    viewcount:        { type: integer, default: 0 }
+    last_visited_at:  { type: timestamp }
+    is_enabled:       { type: boolean, default: true }
+  indexes:
+    uriindex:
+      fields:
+        longurl:
+          length:          "255"
+    shorturlindex:
+      fields:         [shorturl]
+      type:           unique
