@@ -1,0 +1,53 @@
+# sfDoctrineShortUrlPlugin
+
+## Introduction
+
+This plugin provides all the functionnalities of a short url service similar to tinyURL:
+
+  * url shortening
+  * url validation
+
+This is the Doctrine version of the propel plugin [sfShortUrlPlugin](http://www.symfony-project.org/plugins/sfShortUrlPlugin).
+
+It is a work in progress, which aims to grow as a reference implementation of the url shortening topic. The website [http://xav.cc/](http://xav.cc/) uses this plugin. The complete source of this website is available on the SVN repository [http://opensource.lacot.org/xav.cc/svn](http://opensource.lacot.org/xav.cc/svn)
+
+
+## How to install
+
+  * go to your project's root
+
+  * Install the plugin:
+
+         ./symfony plugin:install http://plugins.symfony-project.com/sfDoctrineShortUrlPlugin
+
+
+  * clear the cache:
+
+         ./symfony cc
+
+
+  * alternatively, you might prefer to install this plugin as a Subversion dependancy. In this case, here is the repository: [http://svn.symfony-project.com/plugins/sfDoctrineShortUrlPlugin](http://svn.symfony-project.com/plugins/sfDoctrineShortUrlPlugin)
+
+
+## Whishlist
+ * a query-string based api (not strict-REST)
+ * all the possible feedback!
+
+
+## Contribute to the plugin, ask for help
+
+Please ask for help on how to use the plugin on Symfony's users mailing list.
+You can also send me a mail directly : xavier@lacot.org.
+
+
+## License and credits
+
+This plugin has been developed by [Xavier Lacot](http://lacot.org/) and is
+licensed under the MIT license.
+
+
+## Changelog
+
+### version 0.8 - 2010-05-16
+
+Initial public release. Features all the basic functionnalities.
