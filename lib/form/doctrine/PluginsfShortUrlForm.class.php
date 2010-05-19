@@ -56,6 +56,15 @@ abstract class PluginsfShortUrlForm extends BasesfShortUrlForm
           array(
             'invalid'  => 'This shorturl is not allowed.'
           )
+        ),
+        new sfValidatorRegex(
+          array(
+            'pattern'    => '~^([A-Za-z0-9_-\s]+)$~ix',
+            'must_match' => true
+          ),
+          array(
+            'invalid'  => 'This shorturl is not allowed.'
+          )
         )
       ),
       array('required' => false)
