@@ -35,12 +35,7 @@ class PluginsfShortUrlTable extends Doctrine_Table
 
   public function generate($longurl, $shorturl = '')
   {
-    if ('' == $shorturl)
-    {
-      // try to retrieve a corresponding url within the public ones
-      $shorturl_object = $this->findOneByLongurl($longurl);
-    }
-    else
+    if ($shorturl)
     {
       // try to retrieve a corresponding couple (shorturl, longurl)
       $objects = Doctrine_Query::create()
@@ -49,6 +44,12 @@ class PluginsfShortUrlTable extends Doctrine_Table
         ->andWhere('u.shorturl = ?', $shorturl)
         ->execute();
       $shorturl_object = isset($objects[0]) ? $objects[0] : null;
+    }
+
+    if ('' == $shorturl || !isset($shorturl_object) || !$shorturl_object)
+    {
+      // try to retrieve a corresponding url within the public ones
+      $shorturl_object = $this->findOneByLongurl($longurl);
     }
 
     if (!isset($shorturl_object) || !$shorturl_object)
