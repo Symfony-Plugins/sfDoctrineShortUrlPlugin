@@ -6,6 +6,7 @@ sfShortUrl:
     longurl:          { type: clob }
     viewcount:        { type: integer, default: 0 }
     last_visited_at:  { type: timestamp }
+    is_malware:       { type: boolean, default: false }
     is_enabled:       { type: boolean, default: true }
   indexes:
     uriindex:
@@ -14,4 +15,14 @@ sfShortUrl:
           length:          "255"
     shorturlindex:
       fields:         [shorturl]
+      type:           unique
+
+sfShortUrlBannedDomain:
+  actAs: [Timestampable]
+  columns:
+    id:               { type: integer, primary: true, autoincrement: true }
+    domain:           { type: varchar, size: 255, unique: true }
+  indexes:
+    domainindex:
+      fields:         [domain]
       type:           unique

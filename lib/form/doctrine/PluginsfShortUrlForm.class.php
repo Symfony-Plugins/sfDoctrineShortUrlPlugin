@@ -17,6 +17,7 @@ abstract class PluginsfShortUrlForm extends BasesfShortUrlForm
     unset($this['updated_at']);
     unset($this['viewcount']);
     unset($this['is_enabled']);
+    unset($this['is_malware']);
     unset($this['last_visited_at']);
     $this->setWidget('longurl', new sfWidgetFormInputText());
 
@@ -35,6 +36,10 @@ abstract class PluginsfShortUrlForm extends BasesfShortUrlForm
           array(
             'invalid'  => 'This url is not allowed.'
           )
+        ),
+        new sfValidatorBannedDomain(
+          array(),
+          array('invalid' => 'This domain is not allowed.')
         )
       ),
       array('required' => true),
