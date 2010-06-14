@@ -9,6 +9,27 @@
  */
 class BasesfShortUrlActions extends sfActions
 {
+  public function executeDecode(sfWebRequest $request)
+  {
+    $form = new sfShortUrlDecodeForm();
+    $parameters = $request->getParameter($form->getName());
+    $form->setDefaults($parameters);
+
+    if ($request->getMethod() === sfRequest::POST)
+    {
+      $form->bind(
+        $request->getParameter($form->getName())
+      );
+
+      if ($form->isValid())
+      {
+        $this->shorturl_object = $form->getShortUrl();
+      }
+    }
+
+    $this->form = $form;
+  }
+
  /**
   * Executes index action
   *

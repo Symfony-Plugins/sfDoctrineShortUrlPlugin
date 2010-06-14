@@ -32,5 +32,12 @@ class sfDoctrineShortUrlRouting
         array('module' => 'sfShortUrl', 'action' => 'index')
       )
     );
+    $r->prependRoute(
+      'sfShorturl_decode',
+      new sfRoute(
+        '/decode',
+        array('module' => 'sfShortUrl', 'action' => 'decode')
+      )
+    );
   }
 }
