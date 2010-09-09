@@ -41,6 +41,7 @@ class PluginsfShortUrlTable extends Doctrine_Table
     $shorturl_object->setShorturl($shorturl);
     $shorturl_object->setIsEnabled(true);
     $shorturl_object->setViewcount(0);
+    $shorturl_object->setIsExternal(false);
     $shorturl_object->save();
     return $shorturl_object;
   }
@@ -114,6 +115,45 @@ class PluginsfShortUrlTable extends Doctrine_Table
     {
       // no acceptable object => create one
       $shorturl_object = $this->createShortUrl($longurl, $this->generateAlias());
+    }
+
+    return $shorturl_object;
+  }
+
+  public function generateWithRelShortlink($longurl, $shorturl = '')
+  {
+    // try to retrieve a corresponding url within the public ones
+    $shorturl_object = $this->findOneByLongurl($longurl);
+
+    if (!isset($shorturl_object) || !$shorturl_object)
+    {
+      // grab the page
+      $browser = new sfWebBrowser();
+      $selector = $browser->get($longurl)->getResponseDomCssSelector();
+
+      // search for a shortlink in the page
+      $link = $selector->matchSingle('head link[rel=shortlink]')->getNode();
+
+      if ($link)
+      {
+        $extracted_shorturl = $link->getAttribute('href');
+      }
+
+      // if not found, generate our shorturl
+      if (isset($extracted_shorturl) && $extracted_shorturl)
+      {
+        $shorturl_object = new sfShortUrl();
+        $shorturl_object->setLongurl($longurl);
+        $shorturl_object->setShorturl($extracted_shorturl);
+        $shorturl_object->setIsEnabled(true);
+        $shorturl_object->setViewcount(0);
+        $shorturl_object->setIsExternal(true);
+        $shorturl_object->save();
+      }
+      else
+      {
+        $shorturl_object = $this->generate($longurl, $shorturl);
+      }
     }
 
     return $shorturl_object;

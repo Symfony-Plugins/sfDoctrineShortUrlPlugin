@@ -9,17 +9,6 @@
  */
 class sfValidatorBannedDomain extends sfValidatorBase
 {
-  const REGEX_URL_FORMAT = '~^
-      (%s)://                                 # protocol
-      (
-        ([a-z0-9-]+\.)+[a-z]{2,6}             # a domain name
-          |                                   #  or
-        \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}    # a IP address
-      )
-      (:[0-9]+)?                              # a port (optional)
-      (/?|/\S+)                               # a /, nothing or a / with something
-    $~ix';
-
   /**
    * Configures the current validator.
    *
@@ -30,6 +19,7 @@ class sfValidatorBannedDomain extends sfValidatorBase
     parent::configure($options, $messages);
 
     $this->addOption('protocols', array('http', 'https', 'ftp', 'ftps'));
+    $this->addMessage('domain_not_found', 'The domain name could not be found and validated.');
     $this->addMessage('invalid', 'This domain name is not allowed.');
   }
 
@@ -38,9 +28,14 @@ class sfValidatorBannedDomain extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $pattern = sprintf(self::REGEX_URL_FORMAT, implode('|', $this->getOption('protocols')));
+    $pattern = sprintf(sfShortUrl::REGEX_URL_FORMAT, implode('|', $this->getOption('protocols')));
     preg_match($pattern, $value, $matches);
-    $domain = $matches[2];
+    $domain = isset($matches[2]) ? $matches[2] : null;
+
+    if (!$domain)
+    {
+      throw new sfValidatorError($this, 'domain_not_found', array('value' => $value));
+    }
 
     $query = Doctrine_Core::getTable('sfShortUrlBannedDomain')->createQuery()->where('domain = ?', $domain);
 

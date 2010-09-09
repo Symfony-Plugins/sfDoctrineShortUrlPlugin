@@ -11,5 +11,30 @@
  */
 abstract class PluginsfShortUrl extends BasesfShortUrl
 {
+  const REGEX_URL_FORMAT = '~^
+      (%s)://                                 # protocol
+      (
+        ([a-z0-9-]+\.)+[a-z]{2,6}             # a domain name
+          |                                   #  or
+        \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}    # a IP address
+      )
+      (:[0-9]+)?                              # a port (optional)
+      (/?|/\S+)                               # a /, nothing or a / with something
+    $~ix';
 
+  public static $protocols = array('http', 'https', 'ftp', 'ftps');
+
+  public function getDomainName()
+  {
+    $pattern = sprintf(self::REGEX_URL_FORMAT, implode('|', self::$protocols));
+    preg_match($pattern, $this->getLongurl(), $matches);
+    return isset($matches[2]) ? $matches[2] : null;
+  }
+
+  public function saveVisit(sfWebRequest $request)
+  {
+    $this->setViewcount($this->getViewcount() + 1);
+    $this->setLastVisitedAt(date('Y-m-d H:i:s', time()));
+    $this->save();
+  }
 }

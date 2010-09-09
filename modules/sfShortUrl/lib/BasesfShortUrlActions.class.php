@@ -58,9 +58,7 @@ class BasesfShortUrlActions extends sfActions
   {
     $shorturl = Doctrine::getTable('sfShortUrl')->findOneByShorturl($request->getParameter('shorturl'));
     $this->forward404Unless($shorturl && $shorturl->getIsEnabled());
-    $shorturl->setViewcount($shorturl->getViewcount() + 1);
-    $shorturl->setLastVisitedAt(date('Y-m-d H:i:s', time()));
-    $shorturl->save();
+    $shorturl->saveVisit($request);
     $this->redirect($shorturl->getLongurl(), 301);
   }
 }

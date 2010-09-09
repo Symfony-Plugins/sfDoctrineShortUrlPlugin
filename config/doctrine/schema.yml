@@ -8,6 +8,7 @@ sfShortUrl:
     last_visited_at:  { type: timestamp }
     is_malware:       { type: boolean, default: false }
     is_enabled:       { type: boolean, default: true }
+    is_external:      { type: boolean, default: false }
   indexes:
     uriindex:
       fields:
