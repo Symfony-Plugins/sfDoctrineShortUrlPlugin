@@ -1,13 +1,13 @@
 <?php
 
 /**
- * sfValidatorBannedDomain validates that the value is not one of the banned domains
+ * sfValidatorUnallowedDomain validates that the value is not one of the unallowed domains
  *
  * @package    sfDoctrineShortUrlPlugin
  * @subpackage validator
  * @author     Xavier Lacot <xavier@lacot.org>
  */
-class sfValidatorBannedDomain extends sfValidatorBase
+class sfValidatorUnallowedDomain extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -37,9 +37,7 @@ class sfValidatorBannedDomain extends sfValidatorBase
       throw new sfValidatorError($this, 'domain_not_found', array('value' => $value));
     }
 
-    $query = Doctrine_Core::getTable('sfShortUrlBannedDomain')->createQuery()->where('domain = ?', $domain);
-
-    if ($query->count())
+    if (in_array($domain, sfConfig::get('app_sfDoctrineShortUrlPlugin_unallowed_domains', array('xa.vc', 'xav.cc'))))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }

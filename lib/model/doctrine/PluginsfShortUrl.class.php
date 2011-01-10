@@ -28,7 +28,7 @@ abstract class PluginsfShortUrl extends BasesfShortUrl
   {
     $pattern = sprintf(self::REGEX_URL_FORMAT, implode('|', self::$protocols));
     preg_match($pattern, $this->getLongurl(), $matches);
-    return isset($matches[2]) ? $matches[2] : null;
+    return isset($matches[2]) ? strtolower($matches[2]) : null;
   }
 
   public function saveVisit(sfWebRequest $request)

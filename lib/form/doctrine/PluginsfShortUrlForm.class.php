@@ -21,59 +21,8 @@ abstract class PluginsfShortUrlForm extends BasesfShortUrlForm
     unset($this['last_visited_at']);
     $this->setWidget('longurl', new sfWidgetFormInputText());
 
-    $this->validatorSchema['longurl'] = new sfValidatorAnd(
-      array(
-        new sfValidatorUrl(
-          array('required' => true),
-          array(
-            'invalid'  => 'This is not a valid url',
-            'required' => 'Please type in a url'
-          )),
-        new sfValidatorRegex(
-          array(
-            'pattern'  => '~^(?:(?!('.sfContext::getInstance()->getRequest()->getHost().')).)*$~ix'
-          ),
-          array(
-            'invalid'  => 'This url is not allowed.'
-          )
-        ),
-        new sfValidatorBannedDomain(
-          array(),
-          array('invalid' => 'This domain is not allowed.')
-        )
-      ),
-      array('required' => true),
-      array(
-        'required' => 'Please type in a url'
-      )
-    );
-    $this->validatorSchema['shorturl'] = new sfValidatorAnd(
-      array(
-        new sfValidatorString(),
-        new sfValidatorRegex(
-          array(
-            'pattern'    => sprintf(
-              '~^((%s)|(\s+)(.*)|(.*)(\s+)|(\s+)(.*)(\s+))$~ix',
-              implode('|', sfConfig::get('app_sfDoctrineShortUrlPlugin_forbidden_keywords', array('about')))
-            ),
-            'must_match' => false
-          ),
-          array(
-            'invalid'  => 'This shorturl is not allowed.'
-          )
-        ),
-        new sfValidatorRegex(
-          array(
-            'pattern'    => '~^([A-Za-z0-9_-\s]+)$~ix',
-            'must_match' => true
-          ),
-          array(
-            'invalid'  => 'This shorturl is not allowed.'
-          )
-        )
-      ),
-      array('required' => false)
-    );
+    $this->validatorSchema['longurl'] = sfShortUrlForm::getLongurlValidator();
+    $this->validatorSchema['shorturl'] = sfShortUrlForm::getShorturlValidator();
 
     $this->widgetSchema->setLabels(array(
       'longurl'   => 'Enter a long url',
@@ -103,5 +52,66 @@ abstract class PluginsfShortUrlForm extends BasesfShortUrlForm
       $this->getValue('shorturl')
     );
     return $this->object;
+  }
+
+  public static function getLongurlValidator()
+  {
+    return new sfValidatorAnd(
+      array(
+        new sfValidatorUrl(
+          array(
+            'required' => true,
+            'protocols' => array('http', 'https')
+          ),
+          array(
+            'invalid'  => 'This is not a valid url',
+            'required' => 'Please type in a url'
+          )
+        ),
+        new sfValidatorUnallowedDomain(
+          array(),
+          array('invalid' => 'This url is not allowed.')
+        ),
+        new sfValidatorBannedDomain(
+          array(),
+          array('invalid' => 'This domain is not allowed.')
+        )
+      ),
+      array('required' => true),
+      array(
+        'required' => 'Please type in a url'
+      )
+    );
+  }
+
+  public static function getShorturlValidator()
+  {
+    return new sfValidatorAnd(
+      array(
+        new sfValidatorString(),
+        new sfValidatorRegex(
+          array(
+            'pattern'    => sprintf(
+              '~^((%s)|(\s+)(.*)|(.*)(\s+)|(\s+)(.*)(\s+))$~ix',
+              implode('|', sfConfig::get('app_sfDoctrineShortUrlPlugin_forbidden_keywords', array('about')))
+            ),
+            'must_match' => false
+          ),
+          array(
+            'invalid'  => 'This shorturl is not allowed.'
+          )
+        ),
+        new sfValidatorRegex(
+          array(
+            'pattern'    => '~^([A-Za-z0-9_-\s]+)$~ix',
+            'must_match' => true
+          ),
+          array(
+            'invalid'  => 'This shorturl is not allowed.'
+          )
+        )
+      ),
+      array('required' => false)
+    );
   }
 }
