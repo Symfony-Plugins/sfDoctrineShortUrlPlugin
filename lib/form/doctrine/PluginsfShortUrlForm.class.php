@@ -17,7 +17,7 @@ abstract class PluginsfShortUrlForm extends BasesfShortUrlForm
     unset($this['updated_at']);
     unset($this['viewcount']);
     unset($this['is_enabled']);
-    unset($this['is_malware']);
+    unset($this['is_warning']);
     unset($this['last_visited_at']);
     $this->setWidget('longurl', new sfWidgetFormInputText());
 
