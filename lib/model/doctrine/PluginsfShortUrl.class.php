@@ -14,7 +14,7 @@ abstract class PluginsfShortUrl extends BasesfShortUrl
   const REGEX_URL_FORMAT = '~^
       (%s)://                                 # protocol
       (
-        ([a-z0-9-]+\.)+[a-z]{2,6}             # a domain name
+        ([a-z0-9-]+\.)+([a-z]{2,6})             # a domain name
           |                                   #  or
         \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}    # a IP address
       )

@@ -44,6 +44,22 @@ class sfValidatorBannedDomain extends sfValidatorBase
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
+    // search for the parent domain
+    if (isset($matches[3]) && isset($matches[4]))
+    {
+      $parentDomain = $matches[3].$matches[4];
+
+      if ($parentDomain !== $domain)
+      {
+        $query = Doctrine_Core::getTable('sfShortUrlBannedDomain')->createQuery()->where('domain = ?', $parentDomain);
+
+        if ($query->count())
+        {
+          throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        }
+      }
+    }
+
     return $value;
   }
 }
